@@ -9,19 +9,23 @@ def create_table():  # テーブル作成
     conn.close()
 
 
-def name_check():  # 名前の重複をチェック
-    pass
+# def name_check():  # 名前の重複をチェック
+#     pass
 
 
 def add_user():  # 新規ユーザーを追加
     new_name = input('New user name >> ')
     new_age = input('New user age >> ')  # 重複をハジく
-    print(f'Add new user: {new_name}')
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
-    c.execute(f'insert into user_list values ("{new_name}",{new_age})')
-    conn.commit()
-    conn.close()
+    if new_name not in li:
+        print(f'Add new user: {new_name}')
+        conn = sqlite3.connect('user_list_db')
+        c = conn.cursor()
+        c.execute(f'insert into user_list values ("{new_name}",{new_age})')
+        conn.commit()
+        conn.close()
+    else:
+        print('既に存在します。')
+
 
 
 def show_user():  # ユーザーを表示
@@ -34,6 +38,21 @@ def show_user():  # ユーザーを表示
     for list in lists:
         print(f'Name: {list[0]} / age: {list[1]}')
 
+
+def show_user_c():  # チェックリスト作成
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
+    c.execute(f'select * from user_list')
+    lists = c.fetchall()
+    conn.commit()
+    conn.close()
+    li = []
+    for list in lists:
+        li.append(list[0])
+    return li
+
+
+li = show_user_c()
 
 print(
     f'===== Welcome to CRM Application =====\n[S]how: Show all users info\n[A]dd: Add new user\n======================================')

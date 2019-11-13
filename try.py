@@ -16,8 +16,13 @@
 # conn.commit()
 # conn.close()
 # print(lists)
-
-abc = ('a', 'b', 'c')
-list = list(abc)
-print(list)
-print()
+#
+# abc = ('a', 'b', 'c')
+# list = list(abc)
+# # print(list)
+# # print()
+# a = 50
+# if 10  a >= 40:
+#     print(a)
+# else:
+#     print('asd')

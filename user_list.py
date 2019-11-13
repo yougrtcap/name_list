@@ -1,7 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('user_list_db')
-c = conn.cursor()
+
 
 def create_table():  # テーブル作成
 
@@ -10,21 +9,32 @@ def create_table():  # テーブル作成
     conn.close()
 
 
-def add_user():  # 新規ユーザーを追加
+def add_user():  # 新規ユーザーを追加 # 重複をハジく
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     new_name = input('New user name >> ')
-    new_age = input('New user age >> ')  # 重複をハジく
+    new_age = input('New user age >> ')
     li = show_user_c()
-    if new_name not in li:
-        print(f'Add new user: {new_name}')
-        c.execute(f'insert into user_list values ("{new_name}",{new_age})')
-        conn.commit()
-        conn.close()
+    if len(new_name) != 0:
+        if 1 <= len(new_name) and len(new_name) <= 20:
+            if 0 <= int(new_age) and int(new_age) <= 120:
+                if new_name not in li:
+                    print(f'Add new user: {new_name}')
+                    c.execute(f'insert into user_list values ("{new_name}",{new_age})')
+                    conn.commit()
+                    conn.close()
+                else:
+                    print('Duplicated user name')
+            else:
+                print(f'Age is grater than 120')
+        else:
+            print(f'User name is too long(maximun is 20 characters)')
     else:
-        print('既に存在します。')
-
+        print('User name can　not be blank')
 
 def show_user():  # ユーザーを表示
-
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     c.execute(f'select * from user_list')
     lists = c.fetchall()
     conn.commit()
@@ -34,6 +44,8 @@ def show_user():  # ユーザーを表示
 
 
 def show_user_c():  # チェックリスト作成
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     c.execute(f'select * from user_list')
     lists = c.fetchall()
     conn.commit()
@@ -45,6 +57,8 @@ def show_user_c():  # チェックリスト作成
 
 
 def found_user():  # 表示したい人を検索
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     found_name = input('User name >> ')
     lists = c.execute(f'select * from user_list where name == "{found_name}" ').fetchone()
 
@@ -58,6 +72,8 @@ def found_user():  # 表示したい人を検索
 
 
 def delete_user():  # ユーザーの削除
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     user_name = input('User name >> ')
     c.execute(f'delete from user_list where name == "{user_name}"')
     conn.commit()
@@ -66,6 +82,8 @@ def delete_user():  # ユーザーの削除
 
 
 def edit_user():  # 編集
+    conn = sqlite3.connect('user_list_db')
+    c = conn.cursor()
     user_name = input('User name >> ')
     new_name = input('New user name >>')
     new_age = input('New user age >>')

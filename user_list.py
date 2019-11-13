@@ -1,9 +1,10 @@
 import sqlite3
 
+conn = sqlite3.connect('user_list_db')
+c = conn.cursor()
 
 def create_table():  # テーブル作成
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
+
     c.execute(f'create table user_list(name strings,age integer )')
     conn.commit()
     conn.close()
@@ -15,8 +16,6 @@ def add_user():  # 新規ユーザーを追加
     li = show_user_c()
     if new_name not in li:
         print(f'Add new user: {new_name}')
-        conn = sqlite3.connect('user_list_db')
-        c = conn.cursor()
         c.execute(f'insert into user_list values ("{new_name}",{new_age})')
         conn.commit()
         conn.close()
@@ -25,8 +24,7 @@ def add_user():  # 新規ユーザーを追加
 
 
 def show_user():  # ユーザーを表示
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
+
     c.execute(f'select * from user_list')
     lists = c.fetchall()
     conn.commit()
@@ -36,8 +34,6 @@ def show_user():  # ユーザーを表示
 
 
 def show_user_c():  # チェックリスト作成
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
     c.execute(f'select * from user_list')
     lists = c.fetchall()
     conn.commit()
@@ -48,10 +44,8 @@ def show_user_c():  # チェックリスト作成
     return li
 
 
-def found_user():  # 表示したい人を検索 #PASS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ヒットすれば表示まで。なかった場合がまだ。
+def found_user():  # 表示したい人を検索
     found_name = input('User name >> ')
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
     lists = c.execute(f'select * from user_list where name == "{found_name}" ').fetchone()
 
     if type(lists) is tuple:
@@ -64,9 +58,7 @@ def found_user():  # 表示したい人を検索 #PASS!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 def delete_user():  # ユーザーの削除
-    conn = sqlite3.connect('user_list_db')
-    user_name = input('User name? >> ')
-    c = conn.cursor()
+    user_name = input('User name >> ')
     c.execute(f'delete from user_list where name == "{user_name}"')
     conn.commit()
     conn.close()
@@ -74,12 +66,14 @@ def delete_user():  # ユーザーの削除
 
 
 def edit_user():  # 編集
-    conn = sqlite3.connect('user_list_db')
-    c = conn.cursor()
-    c.execute(f'update user_list set name ="pasumo" where name == "suica" ')
+    user_name = input('User name >> ')
+    new_name = input('New user name >>')
+    new_age = input('New user age >>')
+    c.execute(f'update user_list set name ="{new_name}",age ="{new_age}"  where name = "{user_name}" ')
     conn.commit()
     conn.close()
-    print(f'Update user suica')
+    print(f'Update user {new_name}')
+
 
 def main():  # 入力表示追加
     y_command = input('Your command >> ')
